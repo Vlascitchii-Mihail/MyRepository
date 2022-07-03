@@ -2457,6 +2457,7 @@ drawable design_ic_visibility
 drawable design_ic_visibility_off
 drawable design_password_eye
 drawable design_snackbar_background
+drawable ic_action_add
 drawable ic_clock_black_24dp
 drawable ic_keyboard_black_24dp
 drawable ic_launcher_background
@@ -2585,6 +2586,7 @@ id action_text
 id actions
 id activity_chooser_view_content
 id add
+id add_new_crime
 id alertTitle
 id aligned
 id all
@@ -2615,6 +2617,7 @@ id bounceStart
 id buttonPanel
 id cache_measures
 id callMeasure
+id call_button
 id cancel_button
 id carryVelocity
 id center
@@ -2651,9 +2654,13 @@ id continuousVelocity
 id coordinator
 id cos
 id counterclockwise
+id crime_camera
 id crime_date
+id crime_photo
 id crime_recycler_view
+id crime_report
 id crime_solved
+id crime_suspect
 id crime_time
 id crime_title
 id currentState
@@ -2765,6 +2772,7 @@ id line3
 id linear
 id linearLayout2
 id listMode
+id list_is_empty
 id list_item
 id masked
 id match_constraint
@@ -2833,6 +2841,7 @@ id navigation_header_container
 id never
 id neverCompleteToEnd
 id neverCompleteToStart
+id new_crime
 id noScroll
 id noState
 id none
@@ -2994,6 +3003,7 @@ id vertical_only
 id view_offset_helper
 id view_transition
 id view_tree_lifecycle_owner
+id view_tree_on_back_pressed_dispatcher_owner
 id view_tree_saved_state_registry_owner
 id view_tree_view_model_store_owner
 id visible
@@ -3194,6 +3204,7 @@ layout text_view_with_line_height_from_layout
 layout text_view_with_line_height_from_style
 layout text_view_with_theme_line_height
 layout text_view_without_line_height
+menu fragment_crime_list
 mipmap ic_launcher
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description
@@ -3229,6 +3240,7 @@ string app_name
 string appbar_scrolling_view_behavior
 string bottom_sheet_behavior
 string bottomsheet_action_expand_halfway
+string call
 string character_counter_content_description
 string character_counter_overflowed_content_description
 string character_counter_pattern
@@ -3236,10 +3248,19 @@ string chip_text
 string clear_text_end_icon_content_description
 string crime_date
 string crime_details_label
+string crime_report
+string crime_report_no_suspect
+string crime_report_solved
+string crime_report_subject
+string crime_report_suspect
+string crime_report_text
+string crime_report_unsolved
 string crime_solved_label
+string crime_suspect_text
 string crime_title_hint
 string crime_title_label
 string crime_title_name
+string empty_list
 string error_icon_content_description
 string exposed_dropdown_menu_content_description
 string fab_transformation_scrim_behavior
@@ -3319,6 +3340,7 @@ string mtrl_picker_toggle_to_day_selection
 string mtrl_picker_toggle_to_text_input_mode
 string mtrl_picker_toggle_to_year_selection
 string mtrl_timepicker_confirm
+string new_crime
 string password_toggle_content_description
 string path_password_eye
 string path_password_eye_mask_strike_through
@@ -3326,6 +3348,7 @@ string path_password_eye_mask_visible
 string path_password_strike_through
 string require_police
 string search_menu_title
+string send_report
 string status_bar_notification_info_overflow
 string time_set_button
 style AlertDialog_AppCompat
@@ -4533,6 +4556,7 @@ styleable ViewTransition android_id SharedValue SharedValueId clearsTag duration
 styleable include constraintSet
 xml backup_rules
 xml data_extraction_rules
+xml files
 xml standalone_badge
 xml standalone_badge_gravity_bottom_end
 xml standalone_badge_gravity_bottom_start
