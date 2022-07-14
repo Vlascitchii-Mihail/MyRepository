@@ -1,6 +1,7 @@
 package com.bignerdranch.android.criminalintent
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import androidx.fragment.app.Fragment
 import android.os.Bundle
@@ -10,11 +11,9 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
-import java.util.UUID
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.Observer
-import java.util.Date
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.ContactsContract
@@ -28,13 +27,15 @@ import android.widget.*
 import java.io.File
 import androidx.core.content.FileProvider
 import android.content.pm.ResolveInfo
+import android.view.ViewTreeObserver
+import java.util.*
 
 
 private const val TAG = "CrimeFragment"
 private const val ARG_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
 const val REQUEST_KEY = "request"
-private const val DATA_FORMAT = "EEE, MMM, dd"
+private const val DATA_FORMAT = "EEE, d MMM yyyy HH:mm:ss"
 private const val REQUEST_CONTACT = 1
 private const val CALL_REQUEST_CODE = 0
 private const val REQUEST_PHOTO = 2
@@ -48,11 +49,13 @@ class CrimeFragment : Fragment() {
     private lateinit var suspectButton: Button
     private lateinit var callButton: Button
     private lateinit var solvedCheckBox: CheckBox
-//    private lateinit var binding: FragmentCrimeBinding
-//    private lateinit var photoButton: ImageButton
-//    private lateinit var photoView: ImageView
-//    private lateinit var photoFile: File
-//    private lateinit var photoUri: Uri
+    private lateinit var photoButton: ImageButton
+    private lateinit var photoView: ImageView
+    private lateinit var photoFile: File
+    private lateinit var photoUri: Uri
+    private lateinit var treeObserver: ViewTreeObserver
+    var viewWidth = 0
+    var viewHeight = 0
 
     private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
         ViewModelProvider(this)[CrimeDetailViewModel::class.java]
@@ -66,11 +69,6 @@ class CrimeFragment : Fragment() {
         crimeDetailViewModel.loadCrime(crimeId)
     }
 
-
-
-
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_crime, container, false)
 
@@ -81,9 +79,9 @@ class CrimeFragment : Fragment() {
         reportButton = view.findViewById(R.id.crime_report) as Button
         suspectButton = view.findViewById(R.id.crime_suspect) as Button
         callButton = view.findViewById(R.id.call_button) as Button
-//        binding = FragmentCrimeBinding.inflate(layoutInflater)
-//        photoButton = view.findViewById(R.id.crime_camera) as ImageButton
-//        photoView = view.findViewById(R.id.crime_photo) as ImageView
+        photoButton = view.findViewById(R.id.crime_camera) as ImageButton
+        photoView = view.findViewById(R.id.crime_photo) as ImageView
+        photoView.isEnabled = false
         return view
     }
 
@@ -92,8 +90,8 @@ class CrimeFragment : Fragment() {
 
         crimeDetailViewModel.crimeLiveData.observe(viewLifecycleOwner, Observer { crime -> crime?.let {
             this.crime = crime
-//            photoFile = crimeDetailViewModel.getPhotoFile(crime)
-//            photoUri = FileProvider.getUriForFile(requireActivity(), "com.bignerdranch.android.criminalintent.fileprovider", photoFile)
+            photoFile = crimeDetailViewModel.getPhotoFile(crime)
+            photoUri = FileProvider.getUriForFile(requireActivity(), "com.bignerdranch.android.criminalintent.fileprovider", photoFile)
             updateUI()
         }})
 
@@ -141,12 +139,19 @@ class CrimeFragment : Fragment() {
             }
         }
 
+        photoView.setOnClickListener {
+            PhotoZoomFragment.newInstance(photoFile).apply {
+                show(this@CrimeFragment.childFragmentManager, DIALOG_DATE)
+            }
+        }
+
         reportButton.setOnClickListener {
             Intent(Intent.ACTION_SEND).apply {
                 type = "text/playn"
                 putExtra(Intent.EXTRA_TEXT, getCrimeReport())
                 putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject))
             }.also { intent ->
+
                 ////////////////old method
 //                startActivity(intent)
                 val chooserIntent = Intent.createChooser(intent, getString(R.string.send_report))
@@ -186,13 +191,19 @@ class CrimeFragment : Fragment() {
 //            }
 //        }
 
-    }
+        photoButton.apply {
+            val packageManager: PackageManager = requireActivity().packageManager
+            val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val resolvedActivity: ResolveInfo? = packageManager.resolveActivity(captureImage, PackageManager.MATCH_DEFAULT_ONLY)
 
-    //            val pickContactIntent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
-//            pickContactIntent.addCategory(Intent.CATEGORY_HOME)
-//            val packageManager: PackageManager = requireActivity().packageManager
-//            val resolvedActivity: ResolveInfo? = packageManager.resolveActivity(pickContactIntent, PackageManager.MATCH_DEFAULT_ONLY)
-//            if (resolvedActivity == null) isEnabled == false
+            if (resolvedActivity == null) isEnabled = false
+
+            setOnClickListener {
+                cameraPermissionRequestLauncher.launch(Manifest.permission.CAMERA)
+            }
+
+        }
+    }
 
     ////////////////old method
 //    @Deprecated("Deprecated in Java", ReplaceWith(
@@ -218,20 +229,6 @@ class CrimeFragment : Fragment() {
 //        }
 //    }
 //
-
-//    private val pickNumberPhone = registerForActivityResult(ActivityResultContracts.PickContact()) { contactUri ->
-//            val contactsID = arrayOf(ContactsContract.Contacts._ID)
-//            val cursor = contactUri?.let {
-//                requireActivity().contentResolver.query(it, contactsID, null, null, null)
-//            }
-//            cursor?.use {
-//                if(it.count > 0) {
-//                    it.moveToFirst()
-//                    callButton.text = it.getString(0)
-//
-//                }
-//            }
-//        }
 
     private val callPermissionRequestLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(), ::onGotPermissionCall)
@@ -261,7 +258,7 @@ class CrimeFragment : Fragment() {
             AlertDialog.Builder(context).setTitle("Permission denied").setMessage("You have denied permissions forever. " +
                     "You can change your decision in app settings\n\n\"" +
                     "Would you like to open app settings?").setPositiveButton("Open") {_, _ ->
-                startActivity((appSettingsIntent))
+                startActivity(appSettingsIntent)
             }.create().show()
         }
     }
@@ -348,6 +345,55 @@ class CrimeFragment : Fragment() {
     }
 
 
+
+
+
+
+    private val cameraPermissionRequestLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(), ::onGotPermissionCamera)
+
+    private fun onGotPermissionCamera(granted: Boolean) {
+        if (granted) permissionCameraGranted()
+        else {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+            } else askUserForOpeningCameraSettings()
+        }
+    }
+
+    private fun permissionCameraGranted() {
+        pickCamera.launch(photoUri)
+    }
+
+    private fun askUserForOpeningCameraSettings() {
+        val appSettingsIntent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("com.bignerdranch.android.criminalintent", "MainActivity", "CrimeFragment")
+        )
+        if (requireActivity().packageManager.resolveActivity(appSettingsIntent, PackageManager.MATCH_DEFAULT_ONLY) == null) {
+            Toast.makeText(requireContext(), "Permissions are denied forever", Toast.LENGTH_SHORT).show()
+        } else {
+            AlertDialog.Builder(context).setTitle("Permission denied").setMessage("You have denied permissions forever. " +
+                    "You can change your decision in app settings\n\n\"" +
+                    "Would you like to open app settings?").setPositiveButton("Open") {_, _ ->
+                startActivity(appSettingsIntent)
+            }.create().show()
+        }
+    }
+
+    private val pickCamera = registerForActivityResult(ActivityResultContracts.TakePicture()) { _ ->
+//        if (contactUri != null) {
+//            photoView.setImageURI(photoUri)
+//            updatePhotoView()
+//        }
+    }
+
+
+
+
+
+
+
 //    @Deprecated("Deprecated in Java")
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        when {
@@ -373,6 +419,11 @@ class CrimeFragment : Fragment() {
 //                    suspectButton.text = suspect
 //                }
 //            }
+//
+//            requestCode == REQUEST_PHOTO -> {
+//                requireActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+//                updatePhotoView()
+//            }
 //        }
 //    }
 
@@ -384,21 +435,42 @@ class CrimeFragment : Fragment() {
         Log.d(TAG, crime.title)
     }
 
+//    override fun onDetach() {
+//        super.onDetach()
+//        requireActivity().revokeUriPermission(photoUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+//    }
+
     private fun updateUI() {
         titleField.setText(crime.title)
-        dateButton.text = crime.date.toString()
+        dateButton.text = DateFormat.getDateFormat(context).format(crime.date)
+        timeButton.text = DateFormat.format("kk:mm:ss", crime.date)
         solvedCheckBox.apply {
             isChecked = crime.isSolved
             jumpDrawablesToCurrentState()
         }
 
         if (crime.suspect.isNotEmpty()) suspectButton.text = crime.suspect
-//        callButton.text = crime.suspectPhoneNumber
+        callButton.text = if (crime.suspectPhoneNumber == "") "Call to suspect" else crime.suspectPhoneNumber
+
+        updatePhotoView()
+    }
+
+    private fun updatePhotoView() {
+        if(photoFile.exists()) {
+            photoView.isEnabled = true
+            val bitmap = getScaleBitmap(photoFile.path, requireActivity())
+            photoView.setImageBitmap(bitmap)
+            photoView.announceForAccessibility(getText(R.string.image_changed))
+            photoView.contentDescription = getString(R.string.crime_photo_image_description)
+        } else {
+            photoView.setImageDrawable(null)
+            photoView.contentDescription = getString(R.string.crime_photo_no_image_description)
+        }
     }
 
     private fun getCrimeReport() :String {
         val solvedString = if (crime.isSolved) getString(R.string.crime_report_solved) else getString(R.string.crime_report_unsolved)
-        val dataString = DateFormat.format(DATA_FORMAT, crime.date).toString()
+        val dataString = DateFormat.format(DATA_FORMAT, crime.date)
         val suspect = if (crime.suspect.isBlank()) getString(R.string.crime_report_no_suspect) else getString(R.string.crime_report_suspect, crime.suspect)
         return getString(R.string.crime_report, crime.title, dataString, solvedString, suspect)
     }

@@ -1,0 +1,33 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.BeatBox" parent="Theme.AppCompat">
+        <!-- Primary brand color. -->
+        панель названия приложения
+        <item name="colorPrimary">@color/red</item>
+        панель состояния
+        <item name="colorPrimaryVariant">@color/dark_red</item>
+        текст, EditText
+        <item name="colorOnPrimary">@color/gray</item>
+
+        <item name="android:windowBackground">@color/shooting_blue</item>
+        <item name="buttonStyle">@style/BeatBoxButton</item>
+        <!-- Secondary brand color. -->
+        ползунок SeekBar
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        панель состояния
+        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="BeatBoxButton" parent = "Widget.AppCompat.Button">
+<!--        <item name="android:background">@color/dark_blue</item>-->
+        <item name="android:background">@drawable/button_beat_box</item>
+    </style>
+
+<!--    <style name="BeatBoxButton.Strong">-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--    </style>-->
+</resources>
