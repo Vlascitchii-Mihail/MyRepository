@@ -368,11 +368,12 @@ import java.util.Observer
 //}
 
 
-/*fun main() {
+fun main() {
     runBlocking {
 
+//        //create an exception handler
 //        val exceptionHandler = CoroutineExceptionHandler {
-//            _, exception -> println("Caught $exception")
+//            _, exception -> println("CoroutineExceptionHandler caught $exception")
 //    }
 //
 //        val job = GlobalScope.launch(exceptionHandler) {
@@ -381,6 +382,8 @@ import java.util.Observer
 //
 //        val deferred = GlobalScope.async(exceptionHandler) {
 //            println("Hello")
+//
+//            //exception handler doesn't catch exception in async
 //            throw AssertionError("Exception from async")
 //        }
 //
@@ -390,8 +393,10 @@ import java.util.Observer
 
 //        val callAwaitDeferred = true
 //
-//        val deferred = GlobalScope.async(exceptionHandler) {
+//        val deferred = GlobalScope.async {
 //            println("Throwing exception from async")
+//
+//            //wil be caught in await()
 //            throw ArithmeticException("Something crashed")
 //        }
 //
@@ -415,6 +420,8 @@ import java.util.Observer
 //                try {
 //                    delay(Long.MAX_VALUE)
 //                } catch (e: Exception) {
+//
+//                    //second throwing
 //                    println("${e.javaClass.simpleName} in Child job 1")
 //                } finally {
 //                    println("From final")
@@ -422,14 +429,19 @@ import java.util.Observer
 //                }
 //            }
 //
+//            //child 2
 //            launch {
 //                delay(100)
+//
+//                //first throwing
 //                throw IllegalStateException()
 //            }
 //
 //            delay(Long.MAX_VALUE)
 //        }
 //        parentJob.join()
+
+
 
 //        val scope = CoroutineScope(Job())
 //        scope.launch {
@@ -455,47 +467,50 @@ import java.util.Observer
 //        }
 //
     }
-}*/
+}
 
 // Method to simulate a long running task
-//fun getData(asyncCallback: AsyncCallback) {
-//    val triggerError = false
-//
-//    try {
-//        Thread.sleep(3000)
-//        if (triggerError) {
-//            throw IOException()
-//        } else {
-//            // Send success
-//            asyncCallback.onSuccess("[Beep.Boop.Beep]")
-//        }
-//    } catch (e: Exception) {
-//        // send error
-//        asyncCallback.onError(e)
-//    }
-//}
-//
-//// Callback
-//interface AsyncCallback {
-//    fun onSuccess(result: String)
-//    fun onError(e: Exception)
-//}
-//
-//
-//@OptIn(ExperimentalCoroutinesApi::class)
-//suspend fun getDataAsync(): String {
-//    return suspendCancellableCoroutine { continuation ->
-//        getData(object : AsyncCallback {
-//            override fun onSuccess(result: String) {
-//                continuation.resume(result)
-//            }
-//
-//            override fun onError(e: Exception) {
-//                continuation.resumeWithException(e)
-//            }
-//        })
-//    }
-//}
+fun getData(asyncCallback: AsyncCallback) {
+    val triggerError = false
+
+    try {
+        Thread.sleep(3000)
+        if (triggerError) {
+            throw IOException()
+        } else {
+            // Send success
+            asyncCallback.onSuccess("[Beep.Boop.Beep]")
+        }
+    } catch (e: Exception) {
+        // send error
+        asyncCallback.onError(e)
+    }
+}
+
+// Callback
+interface AsyncCallback {
+    fun onSuccess(result: String)
+    fun onError(e: Exception)
+}
+
+
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun getDataAsync(): String {
+
+    //suspendCancellableCoroutine() - Эта функция генерирует исключение CancellationException,
+    // если задание сопрограммы отменяется или завершается, пока оно приостановлено.
+    return suspendCancellableCoroutine { continuation ->
+        getData(object : AsyncCallback {
+            override fun onSuccess(result: String) {
+                continuation.resume(result)
+            }
+
+            override fun onError(e: Exception) {
+                continuation.resumeWithException(e)
+            }
+        })
+    }
+}
 
 
 /*fun main() = runBlocking {
@@ -673,21 +688,21 @@ import java.util.Observer
 //}
 
 
-fun main() = runBlocking {
-    try {
-
-        //runs suspending block inside a coroutine with timeout
-        //throws a TimeoutCancellationException
-        withTimeout(1500L) {
-            repeat(1000) { i ->
-                println("$i  attempts")
-                delay(500)
-            }
-        }
-    } catch (e: TimeoutCancellationException) {
-        println("caught ${e.javaClass.simpleName}")
-    }
-}
+//fun main() = runBlocking {
+//    try {
+//
+//        //withTimeout() - runs suspending block inside a coroutine with timeout
+//        //throws a TimeoutCancellationException
+//        withTimeout(1500L) {
+//            repeat(1000) { i ->
+//                println("$i  attempts")
+//                delay(500)
+//            }
+//        }
+//    } catch (e: TimeoutCancellationException) {
+//        println("caught ${e.javaClass.simpleName}")
+//    }
+//}
 
 
 //fun main() = runBlocking {
@@ -1075,44 +1090,44 @@ fun main() = runBlocking {
 
 //Chapter 13: Testing Coroutines
 
-interface CoroutineContextProvider {
-    fun context(): CoroutineContext
-}
-
-//creating coroutine context
-class CoroutineContextProviderImpl(private val context: CoroutineContext)
-    : CoroutineContextProvider {
-
-    override fun context(): CoroutineContext = context
-    }
-
-//model's class
-data class User(val id: String, val name: String)
-
-//creating new user
-class MainPresenter {
-    suspend fun getUser(userId: String): User {
-        delay(1000)
-        return User(userId, "Filip")
-    }
-}
-
-class MainView(private val presenter: MainPresenter,
-    private val contextProvider: CoroutineContextProvider,
-    private val coroutineScope: CoroutineScope) {
-    var userData: User? = null
-
-    //launching suspend function
-    fun fetchUserData() {
-        coroutineScope.launch(contextProvider.context()) {
-            userData = presenter.getUser("101")
-        }
-    }
-
-    fun printUserData() {
-        println(userData)
-    }
-}
+//interface CoroutineContextProvider {
+//    fun context(): CoroutineContext
+//}
+//
+////creating coroutine context
+//class CoroutineContextProviderImpl(private val context: CoroutineContext)
+//    : CoroutineContextProvider {
+//
+//    override fun context(): CoroutineContext = context
+//    }
+//
+////model's class
+//data class User(val id: String, val name: String)
+//
+////creating new user
+//class MainPresenter {
+//    suspend fun getUser(userId: String): User {
+//        delay(1000)
+//        return User(userId, "Filip")
+//    }
+//}
+//
+//class MainView(private val presenter: MainPresenter,
+//    private val contextProvider: CoroutineContextProvider,
+//    private val coroutineScope: CoroutineScope) {
+//    var userData: User? = null
+//
+//    //launching suspend function
+//    fun fetchUserData() {
+//        coroutineScope.launch(contextProvider.context()) {
+//            userData = presenter.getUser("101")
+//        }
+//    }
+//
+//    fun printUserData() {
+//        println(userData)
+//    }
+//}
 
 
 ////creation new background Thread
