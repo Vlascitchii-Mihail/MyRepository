@@ -66,3 +66,39 @@ fun main() {
     Employee.randomEmployee(employee)
     Employee.writeToFile(employee)
 }
+
+
+fun quickSort( array: Array<Int>, left: Int, right: Int) {
+    val center = partition (array, left, right)
+    if(left < center-1) { // 2) Sorting left half
+        quickSort(array, left, center-1)
+    }
+    if(center < right) { // 3) Sorting right half
+        quickSort(array,center, right)
+    }
+}
+
+fun partition(array: Array<Int>, lft: Int, rgt: Int): Int {
+    var left = lft
+    var right = rgt
+    val pivot = array[(left + right)/2] // 4) Pivot Point
+    while (left <= right) {
+        while (array[left] < pivot) left++ // 5) Find the elements on left that should be on right
+
+        while (array[right] > pivot) right-- // 6) Find the elements on right that should be on left
+
+        // 7) Swap elements, and move left and right indices
+        if (left <= right) {
+            swapArray(array, left,right)
+            left++
+            right--
+        }
+    }
+    return left
+}
+
+fun swapArray(array: Array<Int>, left: Int, right: Int) {
+    val temp = array[left]
+    array[left] = array[right]
+    array[right] = temp
+}
