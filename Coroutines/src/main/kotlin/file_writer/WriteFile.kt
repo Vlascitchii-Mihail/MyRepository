@@ -18,15 +18,18 @@ class Employee(
     fun getEmployeeInfo() =
         "ID: $Id  $surname $name  Birth Date: $birthDate  salary: $salary"
 
+
     companion object {
 
         /**
-         * read data from the file and create the Employee's objects
+         * read data from the files and create the Employee's objects using the data from the file
+         * @param employee - empty List which will be filled with Employee's objects
          */
         fun randomEmployee(employee: MutableList<Employee>) {
             //read random data from the file
             val names: List<String>  = File("User's names.txt").readLines()
             val surname: List<String> = File("User's surnames.txt").readLines()
+
 
             //create random Employee objects, items
             for (i in 0 .. 99) {
@@ -40,54 +43,85 @@ class Employee(
                 )
                 )
             }
+
+            //write in file users' names
+            writeToFile(employee.toTypedArray())
         }
+
+
 
         /**
-         * write the data about rhe Employee to file
+         * sort the users from file
          */
-        fun writeToFile(employee: MutableList<Employee>) {
-            //write data in the file
-            File("Users.txt").printWriter().use { out ->
-                employee.forEach {
-                    out.println(it.getEmployeeInfo() + "\n")
+        fun sortEmployee(filePath: String) {
+            val usersList: MutableList<Employee> = mutableListOf()
+
+            //converting the strings from the file to Employee's objects
+            File(filePath).readLines().map { nameString ->
+                val splitString = nameString.split(" ")
+                if (splitString[0].isNotEmpty()) {
+                    usersList.add(
+                        Employee(
+                        Id = splitString[1].toInt(),
+                        name = splitString[4],
+                        surname = splitString[3],
+                        birthDate = LocalDate.parse(splitString[8]),
+                        salary = splitString[11].toInt()
+                        )
+                    )
                 }
             }
+
+//            println(usersList)
+
+            val usersArray = usersList.toTypedArray()
+
+            //sort the usersList
+            quickSort(usersArray, 0, usersList.size - 1)
+
+            //write user's names in a new file
+            writeToFile(usersArray)
         }
     }
-
-    fun sortEmployee(employee: MutableList<Employee>) {
-
-    }
 }
 
 
-fun main() {
-    val employee: MutableList<Employee> = mutableListOf()
-    Employee.randomEmployee(employee)
-    Employee.writeToFile(employee)
-}
 
 
-fun quickSort( array: Array<Int>, left: Int, right: Int) {
-    val center = partition (array, left, right)
+/**
+ * sort function using the Quick Sort algorithm
+ */
+fun quickSort(usersArray: Array<Employee>, left: Int, right: Int) {
+    val center = partition (usersArray, left, right)
     if(left < center-1) { // 2) Sorting left half
-        quickSort(array, left, center-1)
+        quickSort(usersArray, left, center-1)
     }
     if(center < right) { // 3) Sorting right half
-        quickSort(array,center, right)
+        quickSort(usersArray,center, right)
     }
 }
 
-fun partition(array: Array<Int>, lft: Int, rgt: Int): Int {
+
+
+
+/**
+ * find the center of the array and elements which are bigger or smaller than center element
+ */
+private fun partition(array: Array<Employee>, lft: Int, rgt: Int): Int {
     var left = lft
     var right = rgt
-    val pivot = array[(left + right)/2] // 4) Pivot Point
+
+    //Pivot Point
+    val pivot = array[(left + right)/2].surname
     while (left <= right) {
-        while (array[left] < pivot) left++ // 5) Find the elements on left that should be on right
 
-        while (array[right] > pivot) right-- // 6) Find the elements on right that should be on left
+        //Find the elements on left that should be on right
+        while (array[left].surname < pivot) left++
 
-        // 7) Swap elements, and move left and right indices
+        // Find the elements on right that should be on left
+        while (array[right].surname > pivot) right--
+
+        //Swap elements, and move left and right indices
         if (left <= right) {
             swapArray(array, left,right)
             left++
@@ -97,8 +131,91 @@ fun partition(array: Array<Int>, lft: Int, rgt: Int): Int {
     return left
 }
 
-fun swapArray(array: Array<Int>, left: Int, right: Int) {
+
+
+/**
+ * swapping the elements of the array
+ */
+private fun swapArray(array: Array<Employee>, left: Int, right: Int) {
     val temp = array[left]
     array[left] = array[right]
     array[right] = temp
+}
+
+
+
+/**
+ * write the data about the Employee's array to file
+ * @param employee array of Employee's objects
+ */
+fun writeToFile(employee: Array<Employee>) {
+    println("Enter the name of the file: ")
+
+    //write the file name from the console
+    //let - checking thw input if it isn't null
+    //write data in the file
+    readLine()?.let { fileName ->
+        File(fileName).printWriter().use { out ->
+        employee.forEach { employee->
+            out.println(employee.getEmployeeInfo() + "\n")
+        }
+    }
+    }
+}
+
+
+
+
+fun main() {
+    val employee: MutableList<Employee> = mutableListOf()
+
+    //read data from the files and create the Employee's objects using the data from the file
+//    Employee.randomEmployee(employee)
+
+    //sort the users from file
+//    Employee.sortEmployee("Users.txt")
+
+    val initArray = arrayOf(3, 66, 8, 99, 4, 646, 76, 32, 5, 13, 78, 3, 7)
+    mergeSort(initArray)
+    initArray.forEach { print("$it, ") }
+}
+
+/**
+ * using the Merge algorithm
+ */
+fun merge(leftArray: Array<Int>, rightArray:Array<Int>, resultArray:Array<Int>) {
+    var iLeft=0
+    var jRight=0
+
+    //resultArray.indices - Returns the range of valid indices for the array.
+    for(result in resultArray.indices) {
+
+        //if right array is finished or if left array isn't finished and if left value less than right value
+        if((jRight>=rightArray.size) || (iLeft<leftArray.size && leftArray[iLeft]<=rightArray[jRight])) {
+            resultArray[result]=leftArray[iLeft]
+            iLeft++
+        } else {
+            resultArray[result]=rightArray[jRight]
+            jRight++
+        }
+    }
+}
+
+/**
+ * first coll of Merge function, which using recursion to divide the array
+ */
+fun mergeSort(initArray:Array<Int>) {
+    if(initArray.size<=1)
+        return
+
+    //dividing the array on 2 parts
+    val leftArray = initArray.copyOfRange(0,initArray.size/2)
+    val rightArray = initArray.copyOfRange(initArray.size/2, initArray.size)
+
+    //using recursion to divide the arrays
+    mergeSort(leftArray)
+    mergeSort(rightArray)
+
+    //calling the Merge algorithm
+    merge(leftArray,rightArray, initArray)
 }
