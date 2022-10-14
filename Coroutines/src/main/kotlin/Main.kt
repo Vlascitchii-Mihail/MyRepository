@@ -470,47 +470,47 @@ fun main() {
 }
 
 // Method to simulate a long running task
-fun getData(asyncCallback: AsyncCallback) {
-    val triggerError = false
-
-    try {
-        Thread.sleep(3000)
-        if (triggerError) {
-            throw IOException()
-        } else {
-            // Send success
-            asyncCallback.onSuccess("[Beep.Boop.Beep]")
-        }
-    } catch (e: Exception) {
-        // send error
-        asyncCallback.onError(e)
-    }
-}
-
-// Callback
-interface AsyncCallback {
-    fun onSuccess(result: String)
-    fun onError(e: Exception)
-}
-
-
-@OptIn(ExperimentalCoroutinesApi::class)
-suspend fun getDataAsync(): String {
-
-    //suspendCancellableCoroutine() - Эта функция генерирует исключение CancellationException,
-    // если задание сопрограммы отменяется или завершается, пока оно приостановлено.
-    return suspendCancellableCoroutine { continuation ->
-        getData(object : AsyncCallback {
-            override fun onSuccess(result: String) {
-                continuation.resume(result)
-            }
-
-            override fun onError(e: Exception) {
-                continuation.resumeWithException(e)
-            }
-        })
-    }
-}
+//fun getData(asyncCallback: AsyncCallback) {
+//    val triggerError = false
+//
+//    try {
+//        Thread.sleep(3000)
+//        if (triggerError) {
+//            throw IOException()
+//        } else {
+//            // Send success
+//            asyncCallback.onSuccess("[Beep.Boop.Beep]")
+//        }
+//    } catch (e: Exception) {
+//        // send error
+//        asyncCallback.onError(e)
+//    }
+//}
+//
+//// Callback
+//interface AsyncCallback {
+//    fun onSuccess(result: String)
+//    fun onError(e: Exception)
+//}
+//
+//
+//@OptIn(ExperimentalCoroutinesApi::class)
+//suspend fun getDataAsync(): String {
+//
+//    //suspendCancellableCoroutine() - Эта функция генерирует исключение CancellationException,
+//    // если задание сопрограммы отменяется или завершается, пока оно приостановлено.
+//    return suspendCancellableCoroutine { continuation ->
+//        getData(object : AsyncCallback {
+//            override fun onSuccess(result: String) {
+//                continuation.resume(result)
+//            }
+//
+//            override fun onError(e: Exception) {
+//                continuation.resumeWithException(e)
+//            }
+//        })
+//    }
+//}
 
 
 /*fun main() = runBlocking {
@@ -1161,3 +1161,18 @@ suspend fun getDataAsync(): String {
 
 
 
+//class Statistics {
+//    companion object {
+//
+//    }
+//}
+
+
+//object Statistics {
+//    var speed = 0
+//}
+//
+//
+//fun main() {
+//    Statistics.speed
+//}
