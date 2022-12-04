@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.vm.timemanager.R
 import com.vm.timemanager.adapter.AdapterDays
 import com.vm.timemanager.data.Task
 import com.vm.timemanager.databinding.FragmentDaysBinding
 import com.vm.timemanager.viewModel.DaysViewModel
+import com.vm.timemanager.viewModel.DaysViewModelFactory
 
 /**
  * A simple [Fragment] subclass.
@@ -29,22 +31,22 @@ class DaysFragment : Fragment() {
         // Inflate the layout for this fragment
         //val view =  inflater.inflate(R.layout.fragment_day, container, false)
         _binding = FragmentDaysBinding.inflate(inflater, container, false)
+
+        val dayName = DaysFragmentArgs.fromBundle(requireArguments()).dayName
+//        val viewModelFactory = this.context?.let { DaysViewModelFactory(dayName, it) }
         val viewModel = ViewModelProvider(this)[DaysViewModel::class.java]
 
+//        viewModel.day = dayName
         val adapter = AdapterDays()
 
         binding.taskList.adapter = adapter
-
-        val dayName = DaysFragmentArgs.fromBundle(requireArguments()).dayName
 
         viewModel.getAllTasks(dayName).observe(viewLifecycleOwner, Observer { taskList ->
             adapter.submitList(taskList)
         })
 
-
         binding.newTaskFab.setOnClickListener {
-            val action = DaysFragmentDirections.actionDayFragmentToNewTaskAddingFragment(viewModel.task)
-            DaysFragment().findNavController().navigate(action)
+            this.findNavController().navigate(R.id.newTaskAddingFragment)
         }
 
         return binding.root

@@ -16,8 +16,8 @@ import com.vm.timemanager.viewModel.DaysViewModel
  */
 class SevenDaysFragment : Fragment() {
 
-    private var _binding: FragmentSevenDaysBinding? = null
-    private val binding get() = _binding!!
+//    private var _binding: FragmentSevenDaysBinding? = null
+//    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,7 +25,7 @@ class SevenDaysFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_seven_days, container, false)
-        _binding = FragmentSevenDaysBinding.inflate(inflater, container, false)
+         val binding = FragmentSevenDaysBinding.inflate(inflater, container, false)
 
         val viewModel = ViewModelProvider(this)[DaysViewModel::class.java]
         binding.daysViewModel = viewModel
@@ -75,8 +75,8 @@ class SevenDaysFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        _binding = null
+//    }
 }

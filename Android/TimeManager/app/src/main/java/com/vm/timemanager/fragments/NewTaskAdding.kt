@@ -30,13 +30,11 @@ class NewTaskAdding : Fragment() {
 
         //val viewModel = ViewModelProvider(this)[DaysViewModel::class.java]
 
-        val taskFromDaysFragment: Task = NewTaskAddingArgs.fromBundle(requireArguments()).task
 
         binding.apply {
-            task = taskFromDaysFragment
 
             saveButton.setOnClickListener {
-                viewModel.addTask(task)
+                viewModel.addTask(Task(taskName = taskName.text.toString(), taskDescription = taskDescription.text.toString()))
             }
         }
 

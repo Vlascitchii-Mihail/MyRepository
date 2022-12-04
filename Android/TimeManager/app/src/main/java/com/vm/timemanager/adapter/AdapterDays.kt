@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vm.timemanager.data.Task
-import com.vm.timemanager.databinding.FragmentDayBinding
 import com.vm.timemanager.databinding.FragmentSevenDaysBinding
 import com.vm.timemanager.databinding.HolderTaskBinding
 import kotlinx.coroutines.NonDisposableHandle
@@ -15,6 +14,7 @@ class AdapterDays: ListAdapter<Task, AdapterDays.TaskItemViewHolder>(TaskDiffIte
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskItemViewHolder =
         TaskItemViewHolder.inflateFrom(parent)
+
     override fun onBindViewHolder(holder: TaskItemViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)

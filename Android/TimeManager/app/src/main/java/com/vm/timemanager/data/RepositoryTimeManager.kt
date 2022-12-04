@@ -1,8 +1,16 @@
 package com.vm.timemanager.data
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
+
 class RepositoryTimeManager(private val daoTimeManager: DaoTimeManager) {
 
-    suspend fun addTask(task: Task) = daoTimeManager.addTask(task)
+    suspend fun addTask(task: Task) {
+        withContext(Dispatchers.Default) {
+            daoTimeManager.addTask(task)
+        }
+    }
 
     suspend fun updateTask(task: Task) = daoTimeManager.updateTask(task)
 
