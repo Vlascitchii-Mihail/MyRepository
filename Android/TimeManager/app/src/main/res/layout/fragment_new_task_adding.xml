@@ -23,7 +23,7 @@
             android:text="@={task.taskName}"
             android:textSize="20sp"
             tools:text="This is a new task"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -37,7 +37,7 @@
             android:inputType="textMultiLine"
             android:text="@={task.taskDescription}"
             tools:text="This is the task description"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/task_name"
@@ -48,30 +48,78 @@
             android:id="@+id/start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/task_description"
-            android:textSize="20sp"
-            tools:text="Start time: 21.12.22  11:00 Sat"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="10dp"/>
+            tools:text="Start time: 21.12.22  11:00 Sat" />
+
+        <Button
+            android:id="@+id/button_start_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginTop="12dp"
+            android:text="@{task.startTime == null ? @string/set_start_date : task.startTime.toString()}"
+            app:layout_constraintEnd_toStartOf="@+id/button_start_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/start_time" />
+
+        <Button
+            android:id="@+id/button_start_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:text="@string/start_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/button_start_date"
+            app:layout_constraintTop_toBottomOf="@id/start_time" />
 
         <TextView
             android:id="@+id/end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/start_time"
+            app:layout_constraintTop_toBottomOf="@id/button_start_time"
             android:textSize="20sp"
+            android:text=""
             tools:text="End time: 21.12.22  12:00 Sat"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"/>
+
+        <Button
+            android:id="@+id/button_end_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/end_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_end_time"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:text="@{task.endTime == null ? @string/set_end_date : task.endTime.toString()}"/>
+
+        <Button
+            android:id="@+id/button_end_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/end_time"
+            app:layout_constraintStart_toEndOf="@id/button_end_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:text="@string/end_time"/>
 
         <Button
             android:id="@+id/save_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/save_the_task"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

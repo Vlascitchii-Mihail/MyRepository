@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.vm.timemanager.R
@@ -41,12 +42,16 @@ class DaysFragment : Fragment() {
 
         binding.taskList.adapter = adapter
 
-        viewModel.getAllTasks(dayName).observe(viewLifecycleOwner, Observer { taskList ->
+        viewModel.getAllTasks(dayName)
+
+        viewModel.allTasks.observe(viewLifecycleOwner, Observer { taskList ->
             adapter.submitList(taskList)
         })
 
+
         binding.newTaskFab.setOnClickListener {
-            this.findNavController().navigate(R.id.newTaskAddingFragment)
+            val action = DaysFragmentDirections.dayFragmentToNewTaskFragment(dayName)
+            this.findNavController().navigate(action)
         }
 
         return binding.root

@@ -14,11 +14,11 @@
 
         <action
             android:id="@+id/action_sevenDaysFragment_to_dayFragment"
-            app:destination="@id/dayFragment"/>
+            app:destination="@id/daysFragment"/>
     </fragment>
 
     <fragment
-        android:id="@+id/dayFragment"
+        android:id="@+id/daysFragment"
         android:name="com.vm.timemanager.fragments.DaysFragment"
         android:label="fragment_day"
         tools:layout="@layout/fragment_days">
@@ -26,6 +26,10 @@
         <argument
             android:name="dayName"
             app:argType="string"/>
+
+        <action
+            android:id="@+id/dayFragment_to_newTaskFragment"
+            app:destination="@id/newTaskAddingFragment"/>
 
     </fragment>
 
@@ -35,6 +39,26 @@
         android:label="fragment_new_task_adding"
         tools:layout="@layout/fragment_new_task_adding">
 
+        <argument
+            android:name="day"
+            app:argType="string"/>
+
+        <action
+            android:id="@+id/select_date"
+            app:destination="@id/datePickerFragment"/>
+
+
     </fragment>
+
+    <dialog
+        android:id="@+id/datePickerFragment"
+        android:name="com.vm.timemanager.fragments.DatePickerFragment"
+        android:label="DatePickerFragment">
+
+        <argument
+            android:name="taskDate"
+            app:argType="java.util.Date" />
+
+    </dialog>
 
 </navigation>

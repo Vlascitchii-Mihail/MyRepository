@@ -15,7 +15,7 @@ class DaysViewModel(application: Application): AndroidViewModel(application) {
 
     private val repository: RepositoryTimeManager
 
-//    lateinit var allTasks: LiveData<List<Task>>
+   lateinit  var allTasks: LiveData<List<Task>>
 
 //    lateinit var day: String
 
@@ -26,7 +26,9 @@ class DaysViewModel(application: Application): AndroidViewModel(application) {
             }
     }
 
-    fun getAllTasks(taskDay: String) = repository.getAllTasks(taskDay)
+    fun getAllTasks(taskDay: String) {
+        allTasks = repository.getAllTasks(taskDay)
+    }
 
 //    var allTasks: LiveData<List<Task>> = repository.getAllTasks(day)
 
