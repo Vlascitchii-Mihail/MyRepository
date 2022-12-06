@@ -2,16 +2,18 @@ package com.vm.timemanager.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.vm.timemanager.data.DatabaseTimeManager
 import com.vm.timemanager.data.RepositoryTimeManager
 import com.vm.timemanager.data.Task
+import kotlinx.coroutines.launch
 
-class DaysViewModel(application: Application): AndroidViewModel(application) {
-
+class NewTaskAddingViewModel(application: Application): AndroidViewModel(application) {
     private val repository: RepositoryTimeManager
 
-    lateinit  var allTasks: LiveData<List<Task>>
+    var task: MutableLiveData<Task>? = MutableLiveData<Task>()
+    var day: String? = null
 
     init {
         repository = DatabaseTimeManager.getDatabase(application)
@@ -20,8 +22,9 @@ class DaysViewModel(application: Application): AndroidViewModel(application) {
             }
     }
 
-    fun getAllTasks(taskDay: String) {
-        allTasks = repository.getAllTasks(taskDay)
+    fun addTask(task: Task) {
+        viewModelScope.launch {
+            repository.addTask(task)
+        }
     }
-
 }

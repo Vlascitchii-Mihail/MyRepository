@@ -9,7 +9,7 @@ data class Task(
     @PrimaryKey (autoGenerate = true) var id: Int = 0,
     val day: String? = null,
     var taskName: String = "",
-    val startTime: Date? = null,
+    var startTime: Date? = null,
     val endTime: Date? = null,
     var taskDescription: String = ""
 )

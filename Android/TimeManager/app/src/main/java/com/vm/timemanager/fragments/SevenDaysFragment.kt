@@ -26,46 +26,41 @@ class SevenDaysFragment : Fragment() {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_seven_days, container, false)
          val binding = FragmentSevenDaysBinding.inflate(inflater, container, false)
-
-        val viewModel = ViewModelProvider(this)[DaysViewModel::class.java]
-        binding.daysViewModel = viewModel
-        //binding.lifecycleOwner = viewLifecycleOwner
-
         val fragment = this
 
         binding.apply {
             monday.setOnClickListener {
-                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDayFragment(monday.text.toString())
+                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDaysFragment(monday.text.toString())
                 fragment.findNavController().navigate(action)
             }
 
             tuesday.setOnClickListener {
-                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDayFragment(tuesday.text.toString())
+                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDaysFragment(tuesday.text.toString())
                 fragment.findNavController().navigate(action)
             }
 
             wednesday.setOnClickListener {
-                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDayFragment(wednesday.text.toString())
+                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDaysFragment(wednesday.text.toString())
                 fragment.findNavController().navigate(action)
             }
 
             thursday.setOnClickListener {
-                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDayFragment(thursday.text.toString())
+                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDaysFragment(thursday.text.toString())
                 fragment.findNavController().navigate(action)
             }
 
             friday.setOnClickListener {
-                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDayFragment(friday.text.toString())
+                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDaysFragment(friday.text.toString())
                 fragment.findNavController().navigate(action)
             }
 
             saturday.setOnClickListener {
-                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDayFragment(saturday.text.toString())
+                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDaysFragment(saturday.text.toString())
                 fragment.findNavController().navigate(action)
             }
 
             sunday.setOnClickListener {
-                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDayFragment(sunday.text.toString())
+                val action = SevenDaysFragmentDirections.actionSevenDaysFragmentToDaysFragment(sunday.text.toString())
                 fragment.findNavController().navigate(action)
             }
         }

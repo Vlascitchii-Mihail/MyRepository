@@ -11,8 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.vm.timemanager.data.Task
 import com.vm.timemanager.databinding.FragmentNewTaskAddingBinding
-import com.vm.timemanager.viewModel.DaysViewModel
-import java.time.LocalDate
+import com.vm.timemanager.viewModel.NewTaskAddingViewModel
 import java.util.*
 
 /**
@@ -22,7 +21,7 @@ class NewTaskAdding : Fragment() {
 
     private var _binding: FragmentNewTaskAddingBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by activityViewModels<DaysViewModel>()
+    private val viewModel by activityViewModels<NewTaskAddingViewModel>()
     private var newDate: Date? = null
     private val args: NewTaskAddingArgs by navArgs()
 
@@ -34,25 +33,32 @@ class NewTaskAdding : Fragment() {
         //return inflater.inflate(R.layout.fragment_new_task_adding, container, false)
         _binding = FragmentNewTaskAddingBinding.inflate(inflater, container, false)
         val view = binding.root
+        binding.viewModelBind = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        viewModel.day = args.day
 
         //val viewModel = ViewModelProvider(this)[DaysViewModel::class.java]
 //        val day = NewTaskAddingArgs.fromBundle(requireArguments()).day
 
         setFragmentResultListener(DatePickerFragment.REQUEST_KEY_DATE) { _, bundle ->
-            newDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date
-            binding.buttonStartDate.text = newDate?.toString()
+            viewModel.task?.value = Task(startTime = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date)
+//            newDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date
+//            binding.buttonStartDate.text = newDate?.toString()
+        }
+
+        setFragmentResultListener(TimePickerFragment.REQUEST_KEY_TIME) { _, bundle ->
+            viewModel.task?.value?.startTime = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as Date
+//            binding.buttonStartTime.text = newTime?.toString()
         }
 
         binding.apply {
 
             buttonStartDate.setOnClickListener {
                 findNavController().navigate(
-                    NewTaskAddingDirections.selectDate(Calendar.getInstance().time)
+                    NewTaskAddingDirections.selectDate(viewModel.task?.value?.startTime ?: Calendar.getInstance().time)
                 )
-
             }
-
-//            startTime.text = newDate?.toString() ?: ""
 
             buttonEndDate.setOnClickListener {
                 findNavController().navigate(
@@ -60,15 +66,24 @@ class NewTaskAdding : Fragment() {
                 )
             }
 
-//            endTime.text = newDate?.toString() ?: ""
+            buttonStartTime.setOnClickListener {
+                findNavController().navigate(
+                    NewTaskAddingDirections.selectTime(viewModel.task?.value?.startTime ?: Calendar.getInstance().time)
+                )
+            }
+
 
             saveButton.setOnClickListener {
                 viewModel.addTask(Task(
-                    day = args.day,
-                    startTime = newDate,
+                    day = viewModel.day,
+                    startTime = viewModel.task?.value?.startTime,
+
+                    /**
+                     * must be in viewModel
+                     */
                     endTime = newDate,
-                    taskName = taskName.text.toString(),
-                    taskDescription = taskDescription.text.toString()))
+                    taskName = viewModel.task?.value?.taskName ?: "",
+                    taskDescription = viewModel.task?.value?.taskDescription ?: ""))
             }
         }
 

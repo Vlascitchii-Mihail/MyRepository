@@ -13,7 +13,7 @@
         tools:layout="@layout/fragment_seven_days">
 
         <action
-            android:id="@+id/action_sevenDaysFragment_to_dayFragment"
+            android:id="@+id/action_sevenDaysFragment_to_daysFragment"
             app:destination="@id/daysFragment"/>
     </fragment>
 
@@ -46,7 +46,9 @@
         <action
             android:id="@+id/select_date"
             app:destination="@id/datePickerFragment"/>
-
+        <action
+            android:id="@+id/select_time"
+            app:destination="@id/timePickerFragment" />
 
     </fragment>
 
@@ -60,5 +62,17 @@
             app:argType="java.util.Date" />
 
     </dialog>
+
+    <dialog
+        android:id="@+id/timePickerFragment"
+        android:name="com.vm.timemanager.fragments.TimePickerFragment"
+        android:label="TimePickerFragment" >
+
+        <argument
+            android:name="taskTime"
+            app:argType="java.util.Date" />
+
+    </dialog>
+
 
 </navigation>
