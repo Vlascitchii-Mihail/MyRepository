@@ -46,6 +46,7 @@
         <action
             android:id="@+id/select_date"
             app:destination="@id/datePickerFragment"/>
+
         <action
             android:id="@+id/select_time"
             app:destination="@id/timePickerFragment" />
@@ -59,7 +60,7 @@
 
         <argument
             android:name="taskDate"
-            app:argType="java.util.Date" />
+            app:argType="java.time.LocalDateTime" />
 
     </dialog>
 
@@ -70,7 +71,7 @@
 
         <argument
             android:name="taskTime"
-            app:argType="java.util.Date" />
+            app:argType="java.time.LocalDateTime" />
 
     </dialog>
 

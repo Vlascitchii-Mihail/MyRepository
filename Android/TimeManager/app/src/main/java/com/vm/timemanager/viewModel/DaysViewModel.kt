@@ -13,6 +13,8 @@ class DaysViewModel(application: Application): AndroidViewModel(application) {
 
     lateinit  var allTasks: LiveData<List<Task>>
 
+    var dayName: String = ""
+
     init {
         repository = DatabaseTimeManager.getDatabase(application)
             .getDaoTimeManager().let { dao->
@@ -20,8 +22,8 @@ class DaysViewModel(application: Application): AndroidViewModel(application) {
             }
     }
 
-    fun getAllTasks(taskDay: String) {
-        allTasks = repository.getAllTasks(taskDay)
+    fun getAllTasks() {
+        allTasks = repository.getAllTasks(dayName)
     }
 
 }

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.vm.timemanager.data.Task
 import com.vm.timemanager.databinding.FragmentNewTaskAddingBinding
 import com.vm.timemanager.viewModel.NewTaskAddingViewModel
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -42,13 +44,17 @@ class NewTaskAdding : Fragment() {
 //        val day = NewTaskAddingArgs.fromBundle(requireArguments()).day
 
         setFragmentResultListener(DatePickerFragment.REQUEST_KEY_DATE) { _, bundle ->
-            viewModel.task?.value = Task(startTime = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date)
+            viewModel.task?.value?.startTime = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as LocalDateTime
 //            newDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_DATE) as Date
 //            binding.buttonStartDate.text = newDate?.toString()
+            Toast.makeText(requireContext(), "Date:  ${viewModel.task?.value}", Toast.LENGTH_SHORT).show()
         }
 
         setFragmentResultListener(TimePickerFragment.REQUEST_KEY_TIME) { _, bundle ->
-            viewModel.task?.value?.startTime = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as Date
+//            viewModel.task?.value?.startTime = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as Date
+            viewModel.task?.value?.startTime = bundle.getSerializable(TimePickerFragment.BUNDLE_KEY_TIME) as LocalDateTime
+            Toast.makeText(requireContext(), "Date:  ${viewModel.task?.value}", Toast.LENGTH_SHORT).show()
+
 //            binding.buttonStartTime.text = newTime?.toString()
         }
 
@@ -56,19 +62,19 @@ class NewTaskAdding : Fragment() {
 
             buttonStartDate.setOnClickListener {
                 findNavController().navigate(
-                    NewTaskAddingDirections.selectDate(viewModel.task?.value?.startTime ?: Calendar.getInstance().time)
+                    NewTaskAddingDirections.selectDate(viewModel.task?.value?.startTime ?: LocalDateTime.now())
                 )
             }
 
             buttonEndDate.setOnClickListener {
                 findNavController().navigate(
-                    NewTaskAddingDirections.selectDate(Calendar.getInstance().time)
+                    NewTaskAddingDirections.selectDate(viewModel.task?.value?.startTime ?: LocalDateTime.now())
                 )
             }
 
             buttonStartTime.setOnClickListener {
                 findNavController().navigate(
-                    NewTaskAddingDirections.selectTime(viewModel.task?.value?.startTime ?: Calendar.getInstance().time)
+                    NewTaskAddingDirections.selectTime(viewModel.task?.value?.startTime ?: LocalDateTime.now())
                 )
             }
 
@@ -81,7 +87,7 @@ class NewTaskAdding : Fragment() {
                     /**
                      * must be in viewModel
                      */
-                    endTime = newDate,
+//                    endTime = newDate,
                     taskName = viewModel.task?.value?.taskName ?: "",
                     taskDescription = viewModel.task?.value?.taskDescription ?: ""))
             }

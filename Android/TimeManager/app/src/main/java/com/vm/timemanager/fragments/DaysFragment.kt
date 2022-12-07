@@ -33,10 +33,7 @@ class DaysFragment : Fragment() {
         //val view =  inflater.inflate(R.layout.fragment_day, container, false)
         _binding = FragmentDaysBinding.inflate(inflater, container, false)
 
-        /**
-         * must be in viewModel
-         */
-        val dayName = DaysFragmentArgs.fromBundle(requireArguments()).dayName
+
 //        val viewModelFactory = this.context?.let { DaysViewModelFactory(dayName, it) }
         val viewModel = ViewModelProvider(this)[DaysViewModel::class.java]
 
@@ -45,10 +42,9 @@ class DaysFragment : Fragment() {
 
         binding.taskList.adapter = adapter
 
-        /**
-         * must be in viewModel
-         */
-        viewModel.getAllTasks(dayName)
+        viewModel.dayName = DaysFragmentArgs.fromBundle(requireArguments()).dayName
+
+        viewModel.getAllTasks()
 
         viewModel.allTasks.observe(viewLifecycleOwner, Observer { taskList ->
             adapter.submitList(taskList)
@@ -56,7 +52,7 @@ class DaysFragment : Fragment() {
 
 
         binding.newTaskFab.setOnClickListener {
-            val action = DaysFragmentDirections.dayFragmentToNewTaskFragment(dayName)
+            val action = DaysFragmentDirections.dayFragmentToNewTaskFragment(viewModel.dayName)
             this.findNavController().navigate(action)
         }
 

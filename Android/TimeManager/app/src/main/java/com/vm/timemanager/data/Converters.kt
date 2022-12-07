@@ -1,21 +1,20 @@
 package com.vm.timemanager.data
 
 import androidx.room.TypeConverter
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class Converters {
 
     //converts Data to int
-    @TypeConverter fun fromDate(date: Date?) : Long? {
-        return date?.time
+    @TypeConverter fun fromDate(date: LocalDateTime?) : String? {
+        return date?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
     }
 
     //converts int to Data
-    @TypeConverter fun toDate(millisSinceEpoch: Long?): Date? {
-        return millisSinceEpoch?.let {
-            Date(it)
+    @TypeConverter fun toDate(date: String?): LocalDateTime? {
+        return date?.let {
+            LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
         }
     }
 
