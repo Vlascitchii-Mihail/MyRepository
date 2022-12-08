@@ -10,6 +10,6 @@ data class Task(
     val day: String? = null,
     var taskName: String = "",
     var startTime: LocalDateTime? = null,
-    val endTime: LocalDateTime? = null,
+    var endTime: LocalDateTime? = null,
     var taskDescription: String = ""
 )

@@ -5,16 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.vm.timemanager.R
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.vm.timemanager.adapter.AdapterDays
-import com.vm.timemanager.data.Task
 import com.vm.timemanager.databinding.FragmentDaysBinding
 import com.vm.timemanager.viewModel.DaysViewModel
-import com.vm.timemanager.viewModel.DaysViewModelFactory
 
 /**
  * A simple [Fragment] subclass.
@@ -32,22 +31,35 @@ class DaysFragment : Fragment() {
         // Inflate the layout for this fragment
         //val view =  inflater.inflate(R.layout.fragment_day, container, false)
         _binding = FragmentDaysBinding.inflate(inflater, container, false)
-
-
+        val view = binding.root
 //        val viewModelFactory = this.context?.let { DaysViewModelFactory(dayName, it) }
         val viewModel = ViewModelProvider(this)[DaysViewModel::class.java]
 
 //        viewModel.day = dayName
-        val adapter = AdapterDays()
+        val adapterDays = AdapterDays()
 
-        binding.taskList.adapter = adapter
+        //smart cast
+//        if (view is RecyclerView) {
+//            with(view) {
+//                binding.taskList.adapter = AdapterDays()
+//
+//                //add decoration to RecyclerView
+//                addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
+//            }
+//        }
+
+//        binding.taskList.adapter = adapterDays
+        with(binding.taskList) {
+            adapter = adapterDays
+            addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
+        }
 
         viewModel.dayName = DaysFragmentArgs.fromBundle(requireArguments()).dayName
 
         viewModel.getAllTasks()
 
         viewModel.allTasks.observe(viewLifecycleOwner, Observer { taskList ->
-            adapter.submitList(taskList)
+            adapterDays.submitList(taskList)
         })
 
 

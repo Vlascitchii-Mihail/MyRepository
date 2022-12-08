@@ -47,8 +47,13 @@ class TimePickerFragment: DialogFragment() {
 //            val resultTime: Date = GregorianCalendar(initialYear, initialMonth, initialDay, hours, minutes).time
 
             val resultTime: LocalDateTime = LocalDateTime.of(initialYear, initialMonth, initialDay, hours, minutes)
+
             //send date to the NewTaskAddingFragment
-            setFragmentResult(REQUEST_KEY_TIME, bundleOf(BUNDLE_KEY_TIME to resultTime))
+            when(args.timeType) {
+                REQUEST_START_TIME -> setFragmentResult(REQUEST_START_TIME, bundleOf(BUNDLE_KEY_TIME to resultTime))
+                else -> setFragmentResult(REQUEST_END_TIME, bundleOf(BUNDLE_KEY_TIME to resultTime))
+            }
+            //send date to the NewTaskAddingFragment
         }
 
         return TimePickerDialog(
@@ -64,7 +69,8 @@ class TimePickerFragment: DialogFragment() {
 
 
     companion object {
-        const val REQUEST_KEY_TIME = "REQUEST_KEY_TIME"
+        const val REQUEST_START_TIME = "REQUEST_START_TIME"
+        const val REQUEST_END_TIME = "REQUEST_END_TIME"
         const val BUNDLE_KEY_TIME = "BUNDLE_KEY_TIME"
     }
 }

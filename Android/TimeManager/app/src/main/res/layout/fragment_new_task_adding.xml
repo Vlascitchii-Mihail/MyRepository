@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="java.time.LocalDateTime"/>
+        <import type="java.time.format.DateTimeFormatter"/>
         <variable
             name="viewModelBind"
             type="com.vm.timemanager.viewModel.NewTaskAddingViewModel" />
@@ -45,17 +47,31 @@
             android:autofillHints="" />
 
         <TextView
+            android:id="@+id/start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginTop="8dp"
+            android:text='@{viewModelBind.task.startTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}'
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/task_description"
+            tools:text="Start date: 08.12.22" />
+
+
+        <TextView
             android:id="@+id/start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"
             android:layout_marginTop="8dp"
-            android:text='@{"Start time: " + viewModelBind.task.startTime + " " + viewModelBind.task.startTime}'
+            android:text='@{viewModelBind.task.startTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))}'
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/button_start_time"
             app:layout_constraintTop_toBottomOf="@id/task_description"
-            tools:text="Start time: 21.12.22  11:00 Sat" />
+            tools:text="Start time: 08:08:31" />
 
         <Button
             android:id="@+id/button_start_date"
@@ -81,16 +97,30 @@
             app:layout_constraintTop_toBottomOf="@id/start_time" />
 
         <TextView
-            android:id="@+id/end_time"
+            android:id="@+id/end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/button_start_time"
             android:textSize="20sp"
-            android:text=""
-            tools:text="End time: 21.12.22  12:00 Sat"
+            android:text='@{viewModelBind.task.endTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}'
+            tools:text="End date: 12.12.22"
             android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"/>
+
+        <TextView
+            android:id="@+id/end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:text='@{viewModelBind.task.endTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))}'
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@id/button_end_time"
+            app:layout_constraintTop_toBottomOf="@id/button_start_time"
+            tools:text="End time: 08:08:31" />
 
         <Button
             android:id="@+id/button_end_date"

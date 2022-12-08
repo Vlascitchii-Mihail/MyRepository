@@ -10,9 +10,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.navArgs
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.util.*
 
 class DatePickerFragment : DialogFragment() {
 
@@ -33,7 +30,12 @@ class DatePickerFragment : DialogFragment() {
             val resultDate = LocalDateTime.of(year, month + 1, day, date.hour, date.minute)
 
             //send date to the NewTaskAddingFragment
-            setFragmentResult(REQUEST_KEY_DATE, bundleOf(BUNDLE_KEY_DATE to resultDate))
+            when (args.dateType) {
+                REQUEST_START_DATE -> setFragmentResult(REQUEST_START_DATE, bundleOf(BUNDLE_KEY_DATE to resultDate))
+                else -> setFragmentResult(REQUEST_END_DATE, bundleOf(BUNDLE_KEY_DATE to resultDate))
+            }
+
+            //send date to the NewTaskAddingFragment
         }
 
         val calendar = Calendar.getInstance()
@@ -60,7 +62,8 @@ class DatePickerFragment : DialogFragment() {
 
 
     companion object {
-        const val REQUEST_KEY_DATE = "REQUEST_KEY_DATE"
+        const val REQUEST_START_DATE = "REQUEST_START_DATE"
+        const val REQUEST_END_DATE = "REQUEST_END_DATE"
         const val BUNDLE_KEY_DATE = "BUNDLE_KEY_DATE"
     }
 }

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 class NewTaskAddingViewModel(application: Application): AndroidViewModel(application) {
     private val repository: RepositoryTimeManager
 
-    var task: MutableLiveData<Task>? = MutableLiveData<Task>(Task())
+    var task: MutableLiveData<Task> = MutableLiveData<Task>(Task())
     var day: String? = null
 
     init {

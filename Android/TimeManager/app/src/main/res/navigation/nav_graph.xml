@@ -61,6 +61,9 @@
         <argument
             android:name="taskDate"
             app:argType="java.time.LocalDateTime" />
+        <argument
+            android:name="dateType"
+            app:argType="string"/>
 
     </dialog>
 
@@ -72,6 +75,9 @@
         <argument
             android:name="taskTime"
             app:argType="java.time.LocalDateTime" />
+        <argument
+            android:name="timeType"
+            app:argType="string"/>
 
     </dialog>
 

@@ -26,4 +26,8 @@ class DaysViewModel(application: Application): AndroidViewModel(application) {
         allTasks = repository.getAllTasks(dayName)
     }
 
+    fun getTask(taskId: Int) {
+        repository.getTask(taskId)
+    }
+
 }
