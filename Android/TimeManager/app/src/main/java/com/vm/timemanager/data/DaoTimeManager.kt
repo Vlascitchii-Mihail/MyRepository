@@ -24,6 +24,6 @@ abstract class DaoTimeManager {
 
     //the Room has already use background threads for returning LiveData
     @Query("SELECT * FROM tasks WHERE id = :taskId")
-    abstract fun getTask(taskId: Int): LiveData<Task>
+    abstract fun getTask(taskId: Int): Task
 
 }

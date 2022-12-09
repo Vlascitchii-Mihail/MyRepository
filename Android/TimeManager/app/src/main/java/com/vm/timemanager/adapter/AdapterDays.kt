@@ -12,7 +12,7 @@ import com.vm.timemanager.viewModel.NewTaskAddingViewModel
 import kotlinx.coroutines.NonDisposableHandle
 import kotlinx.coroutines.NonDisposableHandle.parent
 
-class AdapterDays: ListAdapter<Task, AdapterDays.TaskItemViewHolder>(TaskDiffItemCallback()) {
+class AdapterDays(private val click: (taskId: Int) -> Unit): ListAdapter<Task, AdapterDays.TaskItemViewHolder>(TaskDiffItemCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskItemViewHolder =
@@ -20,11 +20,11 @@ class AdapterDays: ListAdapter<Task, AdapterDays.TaskItemViewHolder>(TaskDiffIte
 
     override fun onBindViewHolder(holder: TaskItemViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, click)
     }
 
     class TaskItemViewHolder(private val binding: HolderTaskBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(item : Task) {
+        fun bind(item : Task, click: (taskId: Int) -> Unit) {
             binding.apply {
                 task = item
 
@@ -32,7 +32,7 @@ class AdapterDays: ListAdapter<Task, AdapterDays.TaskItemViewHolder>(TaskDiffIte
                 // а выполнился как можно быстрее. Это критично в случае с RecyclerView.
                 executePendingBindings()
 
-                root.setOnClickListener {  }
+                root.setOnClickListener { click(item.id) }
             }
         }
 

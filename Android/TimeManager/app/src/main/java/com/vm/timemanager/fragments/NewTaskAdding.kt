@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -35,8 +34,14 @@ class NewTaskAdding : Fragment() {
         //return inflater.inflate(R.layout.fragment_new_task_adding, container, false)
         _binding = FragmentNewTaskAddingBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.viewModelBind = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+
+        binding.apply {
+            if (args.id != 0) viewModel.getTask(args.id)
+            else viewModel.task.value = Task()
+
+            viewModelBind = viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
 
 
         viewModel.day = args.day
@@ -111,7 +116,7 @@ class NewTaskAdding : Fragment() {
             }
 
 
-            saveButton.setOnClickListener {
+            addButton.setOnClickListener {
                 viewModel.addTask(Task(
                     day = viewModel.day,
                     startTime = viewModel.task.value?.startTime,
@@ -120,7 +125,6 @@ class NewTaskAdding : Fragment() {
                     taskDescription = viewModel.task.value?.taskDescription ?: "No description"))
             }
         }
-
 
         return view
     }

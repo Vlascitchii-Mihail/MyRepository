@@ -31,6 +31,10 @@
             android:id="@+id/dayFragment_to_newTaskFragment"
             app:destination="@id/newTaskAddingFragment"/>
 
+        <action
+            android:id="@+id/send_id_to_newTaskFragment"
+            app:destination="@+id/newTaskAddingFragment"/>
+
     </fragment>
 
     <fragment
@@ -41,7 +45,11 @@
 
         <argument
             android:name="day"
-            app:argType="string"/>
+            app:argType="string" />
+
+        <argument
+            android:name="id"
+            app:argType="integer" />
 
         <action
             android:id="@+id/select_date"

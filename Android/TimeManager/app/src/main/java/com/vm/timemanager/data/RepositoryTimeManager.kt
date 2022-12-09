@@ -18,7 +18,13 @@ class RepositoryTimeManager(private val daoTimeManager: DaoTimeManager) {
 
     fun getAllTasks(taskDay: String) = daoTimeManager.getAllTasks(taskDay)
 
-    fun getTask(taskId: Int) = daoTimeManager.getTask(taskId)
+    suspend fun getTask(taskId: Int): Task {
+        val task: Task
+        withContext(Dispatchers.Default) {
+            task = daoTimeManager.getTask(taskId)
+        }
+        return task
+    }
 
     companion object {
 

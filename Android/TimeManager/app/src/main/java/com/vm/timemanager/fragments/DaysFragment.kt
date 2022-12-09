@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.vm.timemanager.adapter.AdapterDays
+import com.vm.timemanager.data.Task
 import com.vm.timemanager.databinding.FragmentDaysBinding
 import com.vm.timemanager.viewModel.DaysViewModel
 
@@ -35,26 +36,18 @@ class DaysFragment : Fragment() {
 //        val viewModelFactory = this.context?.let { DaysViewModelFactory(dayName, it) }
         val viewModel = ViewModelProvider(this)[DaysViewModel::class.java]
 
+        viewModel.dayName = DaysFragmentArgs.fromBundle(requireArguments()).dayName
+
 //        viewModel.day = dayName
-        val adapterDays = AdapterDays()
+        val adapterDays = AdapterDays() { taskId: Int ->
+            val action = DaysFragmentDirections.sendIdToNewTaskFragment(id = taskId, day = viewModel.dayName)
+            this.findNavController().navigate(action)
+        }
 
-        //smart cast
-//        if (view is RecyclerView) {
-//            with(view) {
-//                binding.taskList.adapter = AdapterDays()
-//
-//                //add decoration to RecyclerView
-//                addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
-//            }
-//        }
-
-//        binding.taskList.adapter = adapterDays
         with(binding.taskList) {
             adapter = adapterDays
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
         }
-
-        viewModel.dayName = DaysFragmentArgs.fromBundle(requireArguments()).dayName
 
         viewModel.getAllTasks()
 
@@ -64,7 +57,7 @@ class DaysFragment : Fragment() {
 
 
         binding.newTaskFab.setOnClickListener {
-            val action = DaysFragmentDirections.dayFragmentToNewTaskFragment(viewModel.dayName)
+            val action = DaysFragmentDirections.dayFragmentToNewTaskFragment(viewModel.dayName, 0)
             this.findNavController().navigate(action)
         }
 
