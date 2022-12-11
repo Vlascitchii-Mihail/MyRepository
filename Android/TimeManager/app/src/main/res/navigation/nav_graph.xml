@@ -40,7 +40,7 @@
     <fragment
         android:id="@+id/newTaskAddingFragment"
         android:name="com.vm.timemanager.fragments.NewTaskAdding"
-        android:label="fragment_new_task_adding"
+        android:label="Task description"
         tools:layout="@layout/fragment_new_task_adding">
 
         <argument

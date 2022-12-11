@@ -17,6 +17,14 @@
         android:layout_height="match_parent"
         tools:context=".fragments.NewTaskAdding">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"/>
+
         <EditText
             android:id="@+id/task_name"
             android:layout_width="match_parent"
@@ -28,7 +36,7 @@
             android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             android:hint="@string/write_a_task_name_here"
             android:autofillHints="" />
 
@@ -143,6 +151,16 @@
             android:layout_marginHorizontal="5dp"
             android:layout_marginVertical="10dp"
             android:text="@string/end_time"/>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_the_task"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <Button
             android:id="@+id/add_button"

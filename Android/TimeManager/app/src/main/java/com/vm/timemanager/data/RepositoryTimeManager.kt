@@ -12,9 +12,17 @@ class RepositoryTimeManager(private val daoTimeManager: DaoTimeManager) {
         }
     }
 
-    suspend fun updateTask(task: Task) = daoTimeManager.updateTask(task)
+    suspend fun updateTask(task: Task) {
+        withContext(Dispatchers.Default){
+            daoTimeManager.updateTask(task)
+        }
+    }
 
-    suspend fun deleteTask(task: Task) = daoTimeManager.deleteTask(task)
+    suspend fun deleteTask(task: Task) {
+        withContext(Dispatchers.Default) {
+            daoTimeManager.deleteTask(task)
+        }
+    }
 
     fun getAllTasks(taskDay: String) = daoTimeManager.getAllTasks(taskDay)
 
