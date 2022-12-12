@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+<!--    Allows applications to use exact alarm APIs.-->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -25,6 +28,11 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+<!--        add a receiver-->
+        <receiver
+            android:name=".notifications.NotificationReceiver"
+            android:enabled="true"/>
     </application>
 
 </manifest>

@@ -1,10 +1,15 @@
 package com.vm.timemanager.fragments
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.NavHostFragment
@@ -16,9 +21,11 @@ import androidx.work.*
 import com.vm.timemanager.R
 import com.vm.timemanager.data.Task
 import com.vm.timemanager.databinding.FragmentNewTaskAddingBinding
+import com.vm.timemanager.notifications.*
 import com.vm.timemanager.viewModel.NewTaskAddingViewModel
-import com.vm.timemanager.workManager.PollWorker
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
@@ -104,6 +111,14 @@ class NewTaskAdding : Fragment() {
                     taskName = viewModel.task.value?.taskName ?: "No name",
                     taskDescription = viewModel.task.value?.taskDescription ?: "No description"))
                 navController.popBackStack()
+
+                viewModel.task.value?.startTime?.let { it1 ->
+                    scheduleNotification(
+                        viewModel.task.value?.taskName ?: "No name",
+                        viewModel.task.value?.taskDescription ?: "No description",
+                        it1
+                    )
+                }
             }
 
             saveButton.setOnClickListener {
@@ -169,18 +184,59 @@ class NewTaskAdding : Fragment() {
             }
         }
 
-        //battery constraint
-        val constraints = Constraints.Builder().setRequiresBatteryNotLow(true).build()
-
-        val periodicWorkerRequest = PeriodicWorkRequestBuilder<PollWorker>(1, TimeUnit.MINUTES)
-            .setConstraints(constraints).build()
-
-        //planning the request
-        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-            POLL_WORK,
-            ExistingPeriodicWorkPolicy.KEEP,
-            periodicWorkerRequest)
+//        //battery constraint
+//        val constraints = Constraints.Builder().setRequiresBatteryNotLow(true).build()
+//
+//        val periodicWorkerRequest = PeriodicWorkRequestBuilder<PollWorker>(1, TimeUnit.MINUTES)
+//            .setConstraints(constraints).build()
+//
+//        //planning the request
+//        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
+//            POLL_WORK,
+//            ExistingPeriodicWorkPolicy.KEEP,
+//            periodicWorkerRequest)
 
         return view
     }
+
+    private fun scheduleNotification(title: String, message: String, time: LocalDateTime) {
+        val intent = Intent(requireContext(), NotificationReceiver::class.java)
+        intent.putExtra(TITLE_EXTRA, title)
+        intent.putExtra(MESSAGE_EXTRA, message)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            NOTIFICATION_ID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val time = getTime()
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            ZonedDateTime.of(time, ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            pendingIntent
+        )
+
+        showAlert(time, title, message)
+    }
+
+    private fun showAlert(time: LocalDateTime, title: String, message: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Notification SScheduled")
+            .setMessage(
+                "Title: $title\n" +
+                        "Message: $message\n" +
+                        "Time: ${time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}"
+            ).setPositiveButton("Ok"){_, _ ->}
+            .show()
+    }
+
+
+//    companion object {
+//        fun newIntent(context: Context): Intent {
+//            return Intent(context, NewTaskAdding::class.java)
+//        }
+//    }
 }

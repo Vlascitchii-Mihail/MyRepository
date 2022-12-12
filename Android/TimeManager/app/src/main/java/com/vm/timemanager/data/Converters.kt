@@ -6,12 +6,12 @@ import java.time.format.DateTimeFormatter
 
 class Converters {
 
-    //converts Data to int
+    //converts Data to String
     @TypeConverter fun fromDate(date: LocalDateTime?) : String? {
         return date?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
     }
 
-    //converts int to Data
+    //converts String to Data
     @TypeConverter fun toDate(date: String?): LocalDateTime? {
         return date?.let {
             LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
