@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TimeManager"
         tools:targetApi="31">
+
+<!--declare a broadcast receiver channel-->
+        <receiver
+            android:name=".notifications.NotificationReceiver"
+            android:enabled="true"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -28,11 +34,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-<!--        add a receiver-->
-        <receiver
-            android:name=".notifications.NotificationReceiver"
-            android:enabled="true"/>
     </application>
 
 </manifest>

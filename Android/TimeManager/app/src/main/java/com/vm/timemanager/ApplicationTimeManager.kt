@@ -5,7 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import com.vm.timemanager.notifications.CHANNEL_ID
 
-const val NOTIFICATION_CHANEL_ID = "task_reminder_channel"
+//const val NOTIFICATION_CHANEL_ID = "task_reminder_channel"
 
 class ApplicationTimeManager : Application() {
     override fun onCreate() {
@@ -20,17 +20,28 @@ class ApplicationTimeManager : Application() {
 //        notificationManager.createNotificationChannel(chanel)
 //        notificationManager.createNotificationChannel(chanel)
 
-        createNotificationChannel()
-    }
+//        createNotificationChannel()
 
-    private fun createNotificationChannel() {
         val name = "Time Manager"
         val description = "Time Manager's Notification Channel"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(CHANNEL_ID, name, importance)
         channel.description = description
 
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        //creates a notification chanel in ApplicationManagerClass
+        val notificationManager = getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
     }
+
+//    private fun createNotificationChannel() {
+//        val name = "Time Manager"
+//        val description = "Time Manager's Notification Channel"
+//        val importance = NotificationManager.IMPORTANCE_DEFAULT
+//        val channel = NotificationChannel(CHANNEL_ID, name, importance)
+//        channel.description = description
+//
+//        //creates a notification chanel in MainActivity
+//        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+//        notificationManager.createNotificationChannel(channel)
+//    }
 }
